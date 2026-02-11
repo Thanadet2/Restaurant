@@ -454,7 +454,7 @@
             if(cart.length === 0) return;
 
             // --- ส่วนที่ต้องแก้ให้ส่งครบทุกช่อง ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwW9BFw-jYCoX5S9dq3a_cJWpgA6fhhlSt5Q-1Uxz4Hwm9Q8SMNmc2OsaAdANFM5ZqJ/exec'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby2SpEoJYhM031hBhqc0PCTnNtdTBM6SsYzP2gtxBEikx_W1P01aGZFL57OJ236eSi7/exec'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -655,4 +655,5 @@
 </body>
 
 </html>
+
 
