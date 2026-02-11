@@ -443,7 +443,7 @@
         };
 
         // 4. Submit Order (วางทับฟังก์ชันเดิมตรงนี้)
-        window.submitOrder = () => {
+       window.submitOrder = () => {
             const table = document.getElementById('tableNo').value;
             const guests = document.getElementById('guestCount').value;
 
@@ -453,18 +453,18 @@
             }
             if(cart.length === 0) return;
 
-            // --- ส่วนที่เพิ่มใหม่สำหรับส่งไป Google Sheet ---
-            // ใส่ Web App URL ของคุณที่ได้จากการ Deploy ในช่องด้านล่างนี้
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxwJhAGPuFdbPdElmPQpoqP_wdOhlCsvWPrgqOw8Uf2DlqdlLTtPx__ZQ9c59vzZutO/exec'; 
+            // --- ส่วนที่ต้องแก้ให้ส่งครบทุกช่อง ---
+            const scriptURL = 'ใส่_URL_ใหม่_ที่ได้จาก_GS_ตรงนี้'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
             const dataForSheet = {
-                customerName: `โต๊ะ ${table} (${guests} ท่าน)`,
-                orderItems: orderItemsText,
-                totalPrice: totalPriceSum,
-                phone: "-" 
+                orderID: Date.now(),       // ส่งไปคอลัมน์ B
+                tableNo: table,            // ส่งไปคอลัมน์ C
+                guestCount: guests,        // ส่งไปคอลัมน์ D
+                orderItems: orderItemsText, // ส่งไปคอลัมน์ E
+                totalPrice: totalPriceSum  // ส่งไปคอลัมน์ F
             };
 
             fetch(scriptURL, {
@@ -472,43 +472,16 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataForSheet)
-            }).then(() => console.log("ส่งข้อมูลไป Google Sheet สำเร็จ"));
-            // ------------------------------------------
+            });
+            // ------------------------------------
 
-            // --- ระบบเดิมของคุณ: ตัดสต็อกและบันทึกลง Local ---
+            // ส่วนที่เหลือของโค้ดเดิม (ตัดสต็อก/บันทึก LocalStorage)
             cart.forEach(cartItem => {
                 const stockItem = menuItems.find(i => i.id === cartItem.id);
                 if (stockItem) stockItem.stock -= cartItem.qty;
             });
             saveStock(menuItems); 
-
-            const newOrder = {
-                id: Date.now(),
-                table: table,
-                guests: guests,
-                items: cart,
-                timestamp: Date.now(),
-                timeStr: new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})
-            };
-
-            let orders = JSON.parse(localStorage.getItem('res_orders')) || [];
-            orders.push(newOrder);
-            localStorage.setItem('res_orders', JSON.stringify(orders));
-
-            Swal.fire({
-                icon: 'success',
-                title: 'ส่งออเดอร์แล้ว!',
-                text: 'บันทึกประวัติการสั่งใน Google Sheet เรียบร้อย',
-                timer: 2000,
-                showConfirmButton: false
-            });
-
-            cart = [];
-            updateCartDisplay();
-            closeCartModal();
-            document.getElementById('tableNo').value = "";
-            document.getElementById('guestCount').value = "";
-            loadKitchenOrders(); 
+            // ... (โค้ดที่เหลือคงเดิม) ...
         };
 
         // ================== KITCHEN & BACKEND LOGIC ==================
