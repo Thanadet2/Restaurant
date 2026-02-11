@@ -455,7 +455,7 @@
 
             // --- ส่วนที่เพิ่มใหม่สำหรับส่งไป Google Sheet ---
             // ใส่ Web App URL ของคุณที่ได้จากการ Deploy ในช่องด้านล่างนี้
-            const scriptURL = 'ใส่_URL_ที่ได้จาก_Apps_Script_ตรงนี้'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxwJhAGPuFdbPdElmPQpoqP_wdOhlCsvWPrgqOw8Uf2DlqdlLTtPx__ZQ9c59vzZutO/exec'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
