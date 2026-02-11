@@ -443,7 +443,7 @@
         };
 
         // 4. Submit Order (วางทับฟังก์ชันเดิมตรงนี้)
-       window.submitOrder = () => {
+        window.submitOrder = () => {
             const table = document.getElementById('tableNo').value;
             const guests = document.getElementById('guestCount').value;
 
@@ -453,18 +453,18 @@
             }
             if(cart.length === 0) return;
 
-            // --- ส่วนที่ต้องแก้ให้ส่งครบทุกช่อง ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby2SpEoJYhM031hBhqc0PCTnNtdTBM6SsYzP2gtxBEikx_W1P01aGZFL57OJ236eSi7/exec'; 
+            // --- ส่วนส่งข้อมูลไป Google Sheet ---
+            const scriptURL = 'วางhttps://script.google.com/macros/s/AKfycby2SpEoJYhM031hBhqc0PCTnNtdTBM6SsYzP2gtxBEikx_W1P01aGZFL57OJ236eSi7/exec_URL_ที่ก๊อปมาจาก_ขั้นตอนที่1_ตรงนี้'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
             const dataForSheet = {
-                orderID: Date.now(),       // ส่งไปคอลัมน์ B
-                tableNo: table,            // ส่งไปคอลัมน์ C
-                guestCount: guests,        // ส่งไปคอลัมน์ D
-                orderItems: orderItemsText, // ส่งไปคอลัมน์ E
-                totalPrice: totalPriceSum  // ส่งไปคอลัมน์ F
+                orderID: Date.now(),
+                tableNo: table,
+                guestCount: guests,
+                orderItems: orderItemsText,
+                totalPrice: totalPriceSum
             };
 
             fetch(scriptURL, {
@@ -473,15 +473,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataForSheet)
             });
-            // ------------------------------------
+            // ----------------------------------
 
-            // ส่วนที่เหลือของโค้ดเดิม (ตัดสต็อก/บันทึก LocalStorage)
+            // โค้ดส่วนที่เหลือของคุณ (ตัดสต็อก/บันทึก Local)
             cart.forEach(cartItem => {
                 const stockItem = menuItems.find(i => i.id === cartItem.id);
                 if (stockItem) stockItem.stock -= cartItem.qty;
             });
             saveStock(menuItems); 
-            // ... (โค้ดที่เหลือคงเดิม) ...
+            // ... (โค้ดที่เหลือคงเดิมตามไฟล์ index.html)
         };
 
         // ================== KITCHEN & BACKEND LOGIC ==================
@@ -655,5 +655,3 @@
 </body>
 
 </html>
-
-
