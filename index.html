@@ -454,7 +454,7 @@
             if(cart.length === 0) return;
 
             // --- ส่วนส่งข้อมูลไป Google Sheet ---
-            const scriptURL = 'วางhttps://script.google.com/macros/s/AKfycby2SpEoJYhM031hBhqc0PCTnNtdTBM6SsYzP2gtxBEikx_W1P01aGZFL57OJ236eSi7/exec_URL_ที่ก๊อปมาจาก_ขั้นตอนที่1_ตรงนี้'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwkD-goJVDQyveniwLLxzq8AtwDxlZgSddP67EqjSoi_qF51PI0AoFe6CYr1zsz-gvq/exec'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -655,3 +655,4 @@
 </body>
 
 </html>
+
