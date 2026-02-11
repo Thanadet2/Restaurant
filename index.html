@@ -442,8 +442,7 @@
             if (cart.length === 0) closeCartModal();
         };
 
-        // 4. Submit Order (วางทับฟังก์ชันเดิมตรงนี้)
-        // 4. Submit Order (อัปเดตใหม่เชื่อมต่อกับ Google Sheet)
+        // 4. Submit Order (อัปเดตใหม่เชื่อมต่อกับ URL ของคุณ)
         window.submitOrder = () => {
             const table = document.getElementById('tableNo').value;
             const guests = document.getElementById('guestCount').value;
@@ -454,7 +453,7 @@
             }
             if(cart.length === 0) return;
 
-            // --- เชื่อมต่อ Google Sheet ---
+            // --- ส่วนเชื่อมต่อ Google Sheet (ใช้ URL ของคุณ) ---
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwxPDLR6Sgyn1O-DKhTrIr4JW0VRv73f0nwjVMowVihEZeyF0yd4YReWvzA1qHpxeC1/exec'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
@@ -468,15 +467,16 @@
                 totalPrice: totalPriceSum
             };
 
+            // ใช้ fetch ส่งข้อมูลแบบ POST ไปที่ Apps Script
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataForSheet)
             }).then(() => console.log("ส่งข้อมูลไป Google Sheet เรียบร้อย"));
-            // -----------------------------
+            // ----------------------------------------------
 
-            // ตัดสต็อกในระบบเดิม
+            // ระบบเดิมของคุณ: ตัดสต็อกและบันทึกข้อมูล
             cart.forEach(cartItem => {
                 const stockItem = menuItems.find(i => i.id === cartItem.id);
                 if (stockItem) stockItem.stock -= cartItem.qty;
@@ -683,5 +683,6 @@
 </body>
 
 </html>
+
 
 
