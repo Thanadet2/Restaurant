@@ -443,6 +443,7 @@
         };
 
         // 4. Submit Order (วางทับฟังก์ชันเดิมตรงนี้)
+        // 4. Submit Order (อัปเดตใหม่เชื่อมต่อกับ Google Sheet)
         window.submitOrder = () => {
             const table = document.getElementById('tableNo').value;
             const guests = document.getElementById('guestCount').value;
@@ -453,8 +454,8 @@
             }
             if(cart.length === 0) return;
 
-            // --- ส่วนส่งข้อมูลไป Google Sheet ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwkD-goJVDQyveniwLLxzq8AtwDxlZgSddP67EqjSoi_qF51PI0AoFe6CYr1zsz-gvq/exec'; 
+            // --- เชื่อมต่อ Google Sheet ---
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwxPDLR6Sgyn1O-DKhTrIr4JW0VRv73f0nwjVMowVihEZeyF0yd4YReWvzA1qHpxeC1/exec'; 
             
             const orderItemsText = cart.map(item => `${item.name} (x${item.qty})`).join(', ');
             const totalPriceSum = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -472,16 +473,43 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataForSheet)
-            });
-            // ----------------------------------
+            }).then(() => console.log("ส่งข้อมูลไป Google Sheet เรียบร้อย"));
+            // -----------------------------
 
-            // โค้ดส่วนที่เหลือของคุณ (ตัดสต็อก/บันทึก Local)
+            // ตัดสต็อกในระบบเดิม
             cart.forEach(cartItem => {
                 const stockItem = menuItems.find(i => i.id === cartItem.id);
                 if (stockItem) stockItem.stock -= cartItem.qty;
             });
             saveStock(menuItems); 
-            // ... (โค้ดที่เหลือคงเดิมตามไฟล์ index.html)
+
+            const newOrder = {
+                id: Date.now(),
+                table: table,
+                guests: guests,
+                items: cart,
+                timestamp: Date.now(),
+                timeStr: new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})
+            };
+
+            let orders = JSON.parse(localStorage.getItem('res_orders')) || [];
+            orders.push(newOrder);
+            localStorage.setItem('res_orders', JSON.stringify(orders));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'ส่งออเดอร์แล้ว!',
+                text: 'บันทึกประวัติการสั่งใน Google Sheet เรียบร้อย',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            cart = [];
+            updateCartDisplay();
+            closeCartModal();
+            document.getElementById('tableNo').value = "";
+            document.getElementById('guestCount').value = "";
+            loadKitchenOrders(); 
         };
 
         // ================== KITCHEN & BACKEND LOGIC ==================
@@ -655,4 +683,5 @@
 </body>
 
 </html>
+
 
